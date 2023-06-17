@@ -1,0 +1,12 @@
+
+--- JUnit ---
+
+JUnit definition : JUnit is a unit testing framework for the Java programming language.
+
+1- Life Cycle Test
+2- Assertions Test
+3- Parameterized Test
+4- Exceptions Test
+5- Suite Test
+6- Ignore Test
+7- Time Test
