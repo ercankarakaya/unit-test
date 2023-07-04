@@ -11,4 +11,8 @@ public class MailService {
     public void monthlySendMail(){
         throw new MailServerUnavailableException("Mail server unavailable.");
     }
+
+    public void sendMailToEmployee(String email){
+        System.out.println("An e-mail has been sent to "+email);
+    }
 }
