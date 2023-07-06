@@ -8,5 +8,5 @@ public interface UserService {
 
     void removeUser(int id);
 
-    User getUserByUsername(String username);
+    String getUsername(String username);
 }
