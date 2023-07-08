@@ -1,6 +1,7 @@
 package com.ercan.entity;
 
 import com.ercan.enums.AddressType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,7 +23,8 @@ public class Address {
 
     private Boolean active;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL,optional = false)
     @JoinColumn(name = "person_address_id")
+    @JsonIgnore
     private Person person;
 }

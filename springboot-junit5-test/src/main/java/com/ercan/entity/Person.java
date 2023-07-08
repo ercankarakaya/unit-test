@@ -22,7 +22,6 @@ public class Person {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToMany
-    @JoinColumn(name="person_address_id")
+    @OneToMany(mappedBy = "person",orphanRemoval = true) //(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 }

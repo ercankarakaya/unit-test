@@ -1,5 +1,6 @@
 package com.ercan.dto;
 
+import com.ercan.entity.Address;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -19,5 +20,5 @@ public class PersonDto {
     private String lastName;
     private String gender;
     private String email;
-    private List<String> addresses;
+    private List<Address> addresses;
 }
