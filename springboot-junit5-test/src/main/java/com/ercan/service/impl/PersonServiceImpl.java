@@ -4,6 +4,7 @@ import com.ercan.dto.PersonDto;
 import com.ercan.entity.Address;
 import com.ercan.entity.Person;
 import com.ercan.enums.AddressType;
+import com.ercan.exception.PersonNotFoundException;
 import com.ercan.mapper.PersonMapper;
 import com.ercan.repository.AddressRepository;
 import com.ercan.repository.PersonRepository;
@@ -50,7 +51,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonDto getPersonById(Long id) {
-        return null;
+        return personMapper.toPersonDto(personRepository.findById(id)
+                .orElseThrow(()->new PersonNotFoundException("Person not found!")));
     }
 
     @Override
