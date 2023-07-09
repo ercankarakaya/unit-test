@@ -4,6 +4,7 @@ import com.ercan.dto.PersonDto;
 import com.ercan.entity.Address;
 import com.ercan.entity.Person;
 import com.ercan.enums.AddressType;
+import com.ercan.enums.Gender;
 import com.ercan.exception.PersonNotFoundException;
 import com.ercan.mapper.PersonMapper;
 import com.ercan.repository.AddressRepository;
@@ -64,4 +65,16 @@ public class PersonServiceImpl implements PersonService {
     public List<PersonDto> getAllPerson() {
         return null;
     }
+
+
+    /*
+    private Person toPerson(PersonDto personDto){
+        Person person = new Person();
+        person.setFirstName(personDto.getFirstName());
+        person.setLastName(personDto.getLastName());
+        person.setAddresses(personDto.getAddresses());
+        person.setGender(Gender.valueOf(personDto.getGender()));
+        return person;
+    }
+     */
 }

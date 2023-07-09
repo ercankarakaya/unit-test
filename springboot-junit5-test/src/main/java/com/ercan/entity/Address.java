@@ -2,13 +2,17 @@ package com.ercan.entity;
 
 import com.ercan.enums.AddressType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="address")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
 
     @Id
@@ -27,4 +31,8 @@ public class Address {
     @JoinColumn(name = "person_address_id")
     @JsonIgnore
     private Person person;
+
+    public Address(String address) {
+        this.address = address;
+    }
 }
