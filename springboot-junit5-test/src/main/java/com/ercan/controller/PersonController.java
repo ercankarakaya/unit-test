@@ -23,4 +23,9 @@ public class PersonController {
         return ResponseEntity.ok(personService.getPersonById(id));
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllPerson(){
+        return ResponseEntity.ok(personService.getAllPerson());
+    }
+
 }

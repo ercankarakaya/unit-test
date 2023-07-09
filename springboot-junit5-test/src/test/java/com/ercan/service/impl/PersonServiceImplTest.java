@@ -14,9 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.util.Assert;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -74,15 +75,28 @@ class PersonServiceImplTest {
     }
 
     @Test
+    void testGetAllPerson() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("john");
+        person.setLastName("wick");
+        person.setGender(Gender.MALE);
+        person.setEmail("ercan@gmail.com");
+
+        when(personRepository.findAll()).thenReturn(Collections.singletonList(person));
+
+        List<PersonDto> personDtos = personService.getAllPerson();
+
+        assertEquals(personDtos.size(),1);
+        //assertEquals(personDtos.get(0),PersonDto.builder().id(1L).build());
+    }
+
+    @Test
     void testGetPersonById() {
     }
 
     @Test
     void testDelete() {
-    }
-
-    @Test
-    void testGetAllPerson() {
     }
 
 }

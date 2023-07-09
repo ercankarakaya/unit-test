@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +65,10 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonDto> getAllPerson() {
-        return null;
+       return personRepository.findAll()
+                .stream()
+                .map(item->personMapper.toPersonDto(item))
+                .collect(Collectors.toList());
     }
 
 
