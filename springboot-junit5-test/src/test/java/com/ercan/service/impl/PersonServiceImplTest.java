@@ -83,12 +83,32 @@ class PersonServiceImplTest {
         person.setGender(Gender.MALE);
         person.setEmail("ercan@gmail.com");
 
-        when(personRepository.findAll()).thenReturn(Collections.singletonList(person));
+        when(personRepository.findAll()).thenReturn(Collections.singletonList(person));  // or Arrays.asList(person)
 
         List<PersonDto> personDtos = personService.getAllPerson();
 
         assertEquals(personDtos.size(),1);
         //assertEquals(personDtos.get(0),PersonDto.builder().id(1L).build());
+    }
+
+    @Test
+    void testGetAllPersonWithAddress() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setFirstName("john");
+        person.setLastName("wick");
+        person.setGender(Gender.MALE);
+        person.setEmail("ercan@gmail.com");
+
+        Address address = new Address();
+        address.setAddress("example-address");
+        address.setAddressType(AddressType.OTHER);
+        person.setAddresses(Collections.singletonList(address));
+
+        when(personRepository.findAll()).thenReturn(Collections.singletonList(person));
+        List<PersonDto> personDtos = personService.getAllPerson();
+
+        assertEquals(personDtos.get(0).getAddresses().size(),1);
     }
 
     @Test

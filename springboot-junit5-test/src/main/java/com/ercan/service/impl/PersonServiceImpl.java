@@ -30,12 +30,12 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     public PersonDto save(PersonDto personDto) {
 
-        Assert.notNull(personDto.getFirstName(),"Firstname is required!");
+        Assert.notNull(personDto.getFirstName(), "Firstname is required!");
 
         Person personSaved = personRepository.save(personMapper.toPerson(personDto));
 
         List<Address> addressList = new ArrayList<>();
-        personDto.getAddresses().forEach(item->{
+        personDto.getAddresses().forEach(item -> {
             Address address = new Address();
             address.setAddress(item.getAddress());
             address.setAddressType(AddressType.WORK);
@@ -55,7 +55,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonDto getPersonById(Long id) {
         return personMapper.toPersonDto(personRepository.findById(id)
-                .orElseThrow(()->new PersonNotFoundException("Person not found!")));
+                .orElseThrow(() -> new PersonNotFoundException("Person not found!")));
     }
 
     @Override
@@ -65,10 +65,25 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonDto> getAllPerson() {
-       return personRepository.findAll()
-                .stream()
-                .map(item->personMapper.toPersonDto(item))
-                .collect(Collectors.toList());
+//        return personRepository.findAll()
+//                .stream()
+//                .map(item -> personMapper.toPersonDto(item))
+//                .collect(Collectors.toList());
+
+        List<PersonDto> personDtos = new ArrayList<>();
+
+        personRepository.findAll().forEach(person -> {
+            PersonDto personDto = new PersonDto();
+            personDto.setId(person.getId());
+            personDto.setFirstName(person.getFirstName());
+            personDto.setLastName(person.getLastName());
+            personDto.setGender(person.getGender().name());
+            personDto.setEmail(person.getEmail());
+            personDto.setAddresses(person.getAddresses());
+            personDtos.add(personDto);
+        });
+
+        return personDtos;
     }
 
 
