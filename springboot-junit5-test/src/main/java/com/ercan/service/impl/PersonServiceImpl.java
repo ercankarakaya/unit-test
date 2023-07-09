@@ -4,16 +4,15 @@ import com.ercan.dto.PersonDto;
 import com.ercan.entity.Address;
 import com.ercan.entity.Person;
 import com.ercan.enums.AddressType;
-import com.ercan.enums.Gender;
 import com.ercan.exception.PersonNotFoundException;
 import com.ercan.mapper.PersonMapper;
 import com.ercan.repository.AddressRepository;
 import com.ercan.repository.PersonRepository;
 import com.ercan.service.PersonService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public PersonDto save(PersonDto personDto) {
+
+        Assert.notNull(personDto.getFirstName(),"Firstname is required!");
 
         Person personSaved = personRepository.save(personMapper.toPerson(personDto));
 
