@@ -113,6 +113,27 @@ class BookControllerTest {
     }
 
     @Test
-    void updateBook() {
+    void updateBook() throws Exception{
+        Book updatedBook = Book.builder()
+                .id(1L)
+                .name("ABC")
+                .summary("summary1_new")
+                .build();
+
+        when(bookService.getBookById(book1.getId())).thenReturn(book1);
+        when(bookService.update(updatedBook)).thenReturn(updatedBook);
+
+        String updatedContent = objectWriter.writeValueAsString(updatedBook);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/book")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(updatedContent);
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",notNullValue()))
+                .andExpect(jsonPath("$.name",is("ABC")));
+
     }
 }
