@@ -22,10 +22,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -55,7 +58,15 @@ class BookControllerTest {
     }
 
     @Test
-    void getBookById() {
+    void getBookById() throws Exception {
+        when(bookService.getBookById(book1.getId())).thenReturn(book1);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/book/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",notNullValue()))
+                .andExpect(jsonPath("$.name",is("The Lord Of The Rings")));
     }
 
     @Test
@@ -72,7 +83,8 @@ class BookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(3)))
-                .andExpect(jsonPath("$[1].name",is("Harry Potter")));
+                .andExpect(jsonPath("$[1].name",is("Harry Potter")))
+                .andExpect(jsonPath("$[0].rating",is(7)));
 
     }
 
