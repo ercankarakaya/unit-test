@@ -19,7 +19,7 @@ public class BookController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id){
+    public ResponseEntity<Book> getBookById(@PathVariable Long id) throws BookNotFoundException {
         return ResponseEntity.ok(bookService.getBookById(id));
     }
 
@@ -36,6 +36,12 @@ public class BookController {
     @PutMapping
     public ResponseEntity<Book> updateBook(@RequestBody @Valid Book book) throws BookNotFoundException {
         return ResponseEntity.ok(bookService.update(book));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBookById(@PathVariable Long id) throws BookNotFoundException {
+        bookService.deleteBookById(id);
+        return ResponseEntity.ok("Book deleted.");
     }
 
 }

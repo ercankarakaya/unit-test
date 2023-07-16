@@ -136,4 +136,15 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.name",is("ABC")));
 
     }
+
+    @Test
+    void deleteBookById() throws Exception{
+        when(bookService.getBookById(book1.getId())).thenReturn(book1);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/api/book/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
 }
