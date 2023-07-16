@@ -5,8 +5,10 @@ import com.ercan.exception.BookNotFoundException;
 import com.ercan.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/book")
@@ -17,22 +19,22 @@ public class BookController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBookById(@PathVariable Long id){
+    public ResponseEntity<Book> getBookById(@PathVariable Long id){
         return ResponseEntity.ok(bookService.getBookById(id));
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllBook(){
+    public ResponseEntity<List<Book>> getAllBook(){
         return ResponseEntity.ok(bookService.getAllBook());
     }
 
     @PostMapping
-    public ResponseEntity<?> saveBook(@RequestBody @Validated Book book){
+    public ResponseEntity<Book> saveBook(@RequestBody @Valid Book book){
         return ResponseEntity.ok(bookService.save(book));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateBook(@RequestBody @Validated Book book) throws BookNotFoundException {
+    public ResponseEntity<Book> updateBook(@RequestBody @Valid Book book) throws BookNotFoundException {
         return ResponseEntity.ok(bookService.update(book));
     }
 
