@@ -1,9 +1,9 @@
 package com.ercan.controller;
 
 import com.ercan.entity.Book;
-import com.ercan.repository.BookRepository;
 import com.ercan.service.BookService;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,13 +21,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -42,6 +39,8 @@ class BookControllerTest {
     @Mock
     private BookService bookService;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectWriter objectWriter = objectMapper.writer();
 
     private Book book1;
     private Book book2;
@@ -89,7 +88,28 @@ class BookControllerTest {
     }
 
     @Test
-    void saveBook() {
+    void saveBook() throws Exception{
+        Book book = Book.builder()
+                .id(4L)
+                .name("1984")
+                .summary("summary4")
+                .rating(6)
+                .build();
+
+        when(bookService.save(book)).thenReturn(book);
+
+        String content = objectWriter.writeValueAsString(book);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/book")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(content);
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",notNullValue()))
+                .andExpect(jsonPath("$.name",is("1984")));
+
     }
 
     @Test
