@@ -1,6 +1,7 @@
 package com.ercan.controller;
 
 import com.ercan.entity.Book;
+import com.ercan.exception.BookNotFoundException;
 import com.ercan.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -25,6 +26,8 @@ import java.util.List;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,16 +64,16 @@ class BookControllerTest {
         when(bookService.getBookById(book1.getId())).thenReturn(book1);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/book/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .get("/api/book/1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$",notNullValue()))
-                .andExpect(jsonPath("$.name",is("The Lord Of The Rings")));
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.name", is("The Lord Of The Rings")));
     }
 
     @Test
-    void getAllBook() throws Exception{
-        List<Book> bookList = new ArrayList<>(Arrays.asList(book1,book2,book3));
+    void getAllBook() throws Exception {
+        List<Book> bookList = new ArrayList<>(Arrays.asList(book1, book2, book3));
 
         when(bookService.getAllBook()).thenReturn(bookList);
 
@@ -78,17 +81,17 @@ class BookControllerTest {
         assertNotNull(bookList2.getBody()); */
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/book")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .get("/api/book")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(3)))
-                .andExpect(jsonPath("$[1].name",is("Harry Potter")))
-                .andExpect(jsonPath("$[0].rating",is(7)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[1].name", is("Harry Potter")))
+                .andExpect(jsonPath("$[0].rating", is(7)));
 
     }
 
     @Test
-    void saveBook() throws Exception{
+    void saveBook() throws Exception {
         Book book = Book.builder()
                 .id(4L)
                 .name("1984")
@@ -107,13 +110,13 @@ class BookControllerTest {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$",notNullValue()))
-                .andExpect(jsonPath("$.name",is("1984")));
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.name", is("1984")));
 
     }
 
     @Test
-    void updateBook() throws Exception{
+    void updateBook() throws Exception {
         Book updatedBook = Book.builder()
                 .id(1L)
                 .name("ABC")
@@ -132,19 +135,30 @@ class BookControllerTest {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$",notNullValue()))
-                .andExpect(jsonPath("$.name",is("ABC")));
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.name", is("ABC")));
 
     }
 
     @Test
-    void deleteBookById() throws Exception{
+    void deleteBookById() throws Exception {
         when(bookService.getBookById(book1.getId())).thenReturn(book1);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/book/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .delete("/api/book/1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    void getBookById_BookNotFoundException() throws Exception {
+        when(bookService.getBookById(anyLong())).thenThrow(new BookNotFoundException("Book not found!"));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/book/9")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Book not found!"));
     }
 }
